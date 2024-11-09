@@ -35,4 +35,8 @@ class Backend {
   }
 }
 
-export default Backend;
+const markersBackend = new Backend('markers');
+
+export {
+  markersBackend,
+}
