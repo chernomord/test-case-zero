@@ -9,9 +9,14 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { routes } from 'vue-router/auto-routes'
 
+const customRoutes = [
+  { path: '/', redirect: '/map' },
+  ...routes,
+];
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
+  routes: customRoutes,
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
