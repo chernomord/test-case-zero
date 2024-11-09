@@ -16,7 +16,10 @@ class Backend {
     return new Promise((resolve) => {
       setTimeout(() => {
         const markers = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
-        markers.push(marker);
+        markers.push({
+          ...marker,
+          id: markers.length + 1,
+        });
         localStorage.setItem(this.storageKey, JSON.stringify(markers));
         resolve(marker);
       }, 200);
