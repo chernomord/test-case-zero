@@ -22,12 +22,19 @@ const onAddMarker = (marker) => {
 <template>
   <v-container>
     <h1>Map Page</h1>
-
-    <MarkersList :markers="markers"/>
-    <MapComponent
-      :markers="markers"
-      @add-marker="onAddMarker"
-    />
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12" md="4">
+          <MarkersList :markers="markers"/>
+        </v-col>
+        <v-col cols="12" md="8">
+          <MapComponent
+            :markers="markers"
+            @add-marker="onAddMarker"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
