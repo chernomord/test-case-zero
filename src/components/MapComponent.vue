@@ -40,17 +40,16 @@
 
     addMarkersToMap(props.markers)
     markersWatcher = watch(
-      () => props.markers,
+      () => [...props.markers],
       (newMarkers, oldMarkers) => {
         // Множество для хранения ID маркеров из старого списка
         const oldMarkerIds = new Set(oldMarkers.map(marker => marker.id));
-
         // Добавляем только новые маркеры, которых не было в старом списке
         newMarkers
           .filter(marker => !oldMarkerIds.has(marker.id)) // Проверяем, что маркера нет в старом списке
           .forEach(marker => addMarkerToGroup(marker)); // Добавляем только новые маркеры
       },
-      { deep: true } // Глубокое отслеживание, чтобы отслеживать изменения внутри массива маркеров
+      { deep: true }
     );
   });
 
@@ -79,6 +78,13 @@
       map.value.removeEventListener('click', onMapClick);
       map.value.remove();
       map.value = null;
+    }
+
+    // Удаление `markerLayerGroup` для предотвращения утечек памяти
+    if (markerLayerGroup) {
+      markerLayerGroup.clearLayers();
+      markerLayerGroup.remove();
+      markerLayerGroup = null;
     }
   }
 
