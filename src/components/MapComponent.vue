@@ -34,7 +34,6 @@
     });
   };
 
-
   // Инициализация карты
   onMounted(() => {
     initMap(map)
@@ -42,10 +41,16 @@
     addMarkersToMap(props.markers)
     markersWatcher = watch(
       () => props.markers,
-      (newMarkers) => {
-        addMarkersToMap(newMarkers);
+      (newMarkers, oldMarkers) => {
+        // Множество для хранения ID маркеров из старого списка
+        const oldMarkerIds = new Set(oldMarkers.map(marker => marker.id));
+
+        // Добавляем только новые маркеры, которых не было в старом списке
+        newMarkers
+          .filter(marker => !oldMarkerIds.has(marker.id)) // Проверяем, что маркера нет в старом списке
+          .forEach(marker => addMarkerToGroup(marker)); // Добавляем только новые маркеры
       },
-      { deep: true } // Отслеживание глубоких изменений в массиве маркеров
+      { deep: true } // Глубокое отслеживание, чтобы отслеживать изменения внутри массива маркеров
     );
   });
 
@@ -75,6 +80,10 @@
       map.value.remove();
       map.value = null;
     }
+  }
+
+  function addMarkerToGroup(marker) {
+    L.marker([marker.lat, marker.lng]).addTo(markerLayerGroup);
   }
 
   function onMapClick(e) {
