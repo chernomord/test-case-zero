@@ -21,7 +21,7 @@ class Backend {
           id: markers.length + 1,
         });
         localStorage.setItem(this.storageKey, JSON.stringify(markers));
-        resolve(marker);
+        resolve(markers[markers.length - 1]);
       }, 200);
     });
   }
