@@ -34,9 +34,27 @@
     });
   };
 
+  const centerMapOnUserLocation = (map) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          map.value.setView([latitude, longitude], 13); // Устанавливаем центр карты по локации
+        },
+        (error) => {
+          console.error("Ошибка при получении локации пользователя:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation API не поддерживается вашим браузером.");
+    }
+  };
+
   // Инициализация карты
   onMounted(() => {
     initMap(map)
+
+    centerMapOnUserLocation(map)
 
     addMarkersToMap(props.markers)
     markersWatcher = watch(
