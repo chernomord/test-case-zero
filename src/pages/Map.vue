@@ -24,7 +24,7 @@ const onAddMarker = async (marker) => {
 
 <template>
   <v-container>
-    <h1>Map Page</h1>
+    <h1 class="display-1">Map Page</h1>
     <v-container fluid>
       <v-row>
         <v-col cols="12" md="4">

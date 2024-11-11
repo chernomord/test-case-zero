@@ -15,6 +15,7 @@
   const emit = defineEmits(['addMarker']);
 
   const map = ref(null);
+  const isAddMarkerMode = ref(false);
   let markerLayerGroup = null; // Слой для группировки маркеров
   let markersWatcher = null;   // Ссылка на вотчер для props.markers
 
@@ -29,9 +30,7 @@
     markerLayerGroup = L.layerGroup().addTo(map.value);
 
     // Добавляем каждый маркер из массива markers
-    markers.forEach(marker => {
-      L.marker([marker.lat, marker.lng]).addTo(markerLayerGroup);
-    });
+    markers.forEach(marker => { addMarkerToGroup(marker) });
   };
 
   const centerMapOnUserLocation = (map) => {
@@ -107,7 +106,14 @@
   }
 
   function addMarkerToGroup(marker) {
-    L.marker([marker.lat, marker.lng]).addTo(markerLayerGroup);
+    L.marker([marker.lat, marker.lng]).addTo(markerLayerGroup).bindTooltip(
+      `<strong>ID: ${marker.id}</strong><br>Lat: ${marker.lat}, Lng: ${marker.lng}`,
+      {
+        permanent: false,
+        direction: 'top',
+        offset: L.point(-15, -12)
+      }
+    );
   }
 
   function onMapClick(e) {
