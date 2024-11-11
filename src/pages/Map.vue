@@ -12,9 +12,12 @@ onMounted(() => {
   store.dispatch('loadMarkers');
 });
 
-const onAddMarker = (marker) => {
-  console.log(marker);
-  store.dispatch('addMarker', marker);
+const onAddMarker = async (marker) => {
+  try {
+    await store.dispatch('addMarker', marker);
+  } catch (error) {
+    alert('Ошибка: адрес не найден')
+  }
 }
 
 </script>

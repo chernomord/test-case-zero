@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
-import { markersBackend } from '@/plugins/services/Backend'
+import { markersBackend } from '@/services/Backend'
+import geocode from "@/services/geocode";
 
 export default createStore({
   state() {
@@ -34,12 +35,14 @@ export default createStore({
     },
 
     async addMarker({ commit }, marker) {
-      try {
-        const savedMarker = await markersBackend.addMarker(marker);
-        commit('addMarker', savedMarker);
-      } catch (error) {
-        console.error('Ошибка добавления маркера:', error);
-      }
+        const geocodeResp = await geocode.getReverseGeocode(marker.lat, marker.lng)
+
+        if (geocodeResp.address) {
+          const savedMarker = await markersBackend.addMarker(marker);
+          commit('addMarker', savedMarker);
+        } else {
+          throw 'Address not found'
+        }
     },
 
     async removeMarker({ commit }, markerId) {
