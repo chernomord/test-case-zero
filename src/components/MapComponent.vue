@@ -59,7 +59,6 @@
     markersWatcher = watch(
       () => [...props.markers],
       (newMarkers, oldMarkers) => {
-        // Множество для хранения ID маркеров из старого списка
         const oldMarkerIds = new Set(oldMarkers.map(marker => marker.id));
         // Добавляем только новые маркеры, которых не было в старом списке
         newMarkers
@@ -70,7 +69,6 @@
     );
   });
 
-  // Очистка карты при уничтожении компонента
   onUnmounted(() => {
     removeMap(map);
 
@@ -97,7 +95,6 @@
       map.value = null;
     }
 
-    // Удаление `markerLayerGroup` для предотвращения утечек памяти
     if (markerLayerGroup) {
       markerLayerGroup.clearLayers();
       markerLayerGroup.remove();
@@ -117,17 +114,31 @@
   }
 
   function onMapClick(e) {
-    const newMarker = {
-      lat: e.latlng.lat,
-      lng: e.latlng.lng,
-    };
-    emit('addMarker', newMarker); // Эмитим событие с новым маркером
+    if (isAddMarkerMode.value) {
+      const newMarker = {
+        lat: e.latlng.lat,
+        lng: e.latlng.lng,
+      };
+      emit('addMarker', newMarker);
+    }
+  }
+
+  function addMarkerToggle() {
+    isAddMarkerMode.value = !isAddMarkerMode.value;
   }
 
 </script>
 
 <template>
   <div id="map-container">
+    <div class="button-container">
+      <v-btn
+        icon="mdi-plus"
+        size="small"
+        class="bg-blue-darken-1"
+        :class="{'bg-green': isAddMarkerMode}"
+        @click="addMarkerToggle"/>
+    </div>
     <div id="map"></div>
   </div>
 </template>
@@ -142,5 +153,16 @@
   #map {
     width: 100%;
     height: 100%;
+  }
+
+  .button-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .map-outlined {
+    outline: 6px darkgreen solid;
   }
 </style>
